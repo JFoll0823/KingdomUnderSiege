@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Spear
+  - Enemy
   layers:
   - Default
   - TransparentFX

@@ -23,6 +23,9 @@ public class Skeleton : MonoBehaviour
         if(collider.gameObject.tag == "Spear")
         {
             _healthPoints -= 1;
+        }else if(collider.gameObject.tag == "Player")
+        {
+            GameState.Instance.playerHit();
         }
 
         if (_healthPoints == 0)

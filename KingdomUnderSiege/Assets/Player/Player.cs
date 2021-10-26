@@ -6,7 +6,11 @@ public class Player : MonoBehaviour
 {
 
     [SerializeField] float _moveSpeed = 1f;
+    bool canMove = true;
+    bool followMouse = true;
     float cTime = 0; //used in Movement()
+    Vector3 verticalMovementVector;
+    Vector3 sidewaysMovementVector;
 
     public float _healthPoints;
     // Start is called before the first frame update
@@ -19,6 +23,7 @@ public class Player : MonoBehaviour
     void Update()
     {
         Movement();
+        Combat();
         if(GameState.Instance.getPlayerHealthCurrent() == 0)
         {
             Destroy(gameObject);
@@ -27,38 +32,26 @@ public class Player : MonoBehaviour
 
     void Movement()
     {
-        Debug.Log(Time.time);
+        verticalMovementVector = transform.up * Input.GetAxis("Vertical");
+        sidewaysMovementVector = transform.right * Input.GetAxis("Horizontal");
+
         if (Input.GetButton("Horizontal"))
         {
-            
-            Vector3 sidewaysMovementVector = transform.right * Input.GetAxis("Horizontal");
-            if (Input.GetButtonDown("Jump") && ((Time.time - cTime) >= 3))
-            {
-                transform.position += sidewaysMovementVector * _moveSpeed * Time.deltaTime * 30;
-                cTime = Time.time;
-            }
-            else
-            {
-                transform.position += sidewaysMovementVector * _moveSpeed * Time.deltaTime;
-            }
+            transform.position += sidewaysMovementVector * _moveSpeed * Time.deltaTime;
         }
 
         if (Input.GetButton("Vertical"))
         {
-            Vector3 verticalMovementVector = transform.up * Input.GetAxis("Vertical");
-            if (Input.GetButtonDown("Jump") && ((Time.time - cTime) >= 3))
-            {
-                transform.position += verticalMovementVector * _moveSpeed * Time.deltaTime * 30;
-                cTime = Time.time;
-            }
-            else
-            {
-                transform.position += verticalMovementVector * _moveSpeed * Time.deltaTime;
-            }
-            
+            transform.position += verticalMovementVector * _moveSpeed * Time.deltaTime;  
         }
 
-        
+        if (Input.GetButtonDown("Jump") && ((Time.time - cTime) >= 3))
+        {
+            transform.position += (verticalMovementVector + sidewaysMovementVector) * _moveSpeed * Time.deltaTime * 30;
+            cTime = Time.time;
+        }
+
+
 
         /*
          * Code from 3D tutorial to use as reference
@@ -68,6 +61,19 @@ public class Player : MonoBehaviour
 
         GetComponent<CharacterController>().Move(movementVector * _moveSpeed * Time.deltaTime);
         */
+    }
+
+    void Combat()
+    {
+        if (Input.GetButtonDown("Fire1"))
+        {
+            Debug.Log("Poke");
+        }
+
+        if (Input.GetButtonDown("Fire2"))
+        {
+            Debug.Log("Swipe");
+        }
     }
 
 /*

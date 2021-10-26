@@ -28,7 +28,7 @@ public class Player : MonoBehaviour
 		Movement();
 		Combat();
 
-		if((Time.time - timeSinceAttack) > 1)
+		if(((Time.time - timeSinceAttack) >= .5) && !canAttack)
         {
 			transform.Find("Spear Container").Find("Spear").gameObject.transform.position = origPos;
 			canAttack = true;

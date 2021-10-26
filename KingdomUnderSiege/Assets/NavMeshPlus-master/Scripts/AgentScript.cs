@@ -5,6 +5,8 @@ using UnityEngine.AI;
 
 public class AgentScript : MonoBehaviour
 {
+    // used this video for code and to help figure out navmesh: https://youtu.be/SDfEytEjb5o
+    // https://github.com/h8man/NavMeshPlus.git github for NavMeshPlus
 
     [SerializeField] Transform target;
 

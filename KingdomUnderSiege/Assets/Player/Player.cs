@@ -81,6 +81,17 @@ public class Player : MonoBehaviour
 		//poke
 		if (Input.GetButtonDown("Fire1"))
 		{
+			origPos = transform.Find("Spear Container").Find("Spear").gameObject.transform.position;
+			canMove = false;
+			canAttack = false;
+			//Debug.Log("Swipe");
+			transform.Find("Spear Container").Find("Spear").gameObject.transform.position = transform.Find("Spear Container").Find("SpearPokePosition").gameObject.transform.position;
+			timeSinceAttack = Time.time;
+		}
+
+
+		if (Input.GetButtonDown("Fire2"))
+		{
 			canMove = false;
 			canAttack = false;
 			//Debug.Log("Poke");
@@ -88,17 +99,6 @@ public class Player : MonoBehaviour
 
 			canAttack = true;
 			canMove = true;
-		}
-
-
-		if (Input.GetButtonDown("Fire2"))
-		{
-			origPos = transform.Find("Spear Container").Find("Spear").gameObject.transform.position;
-			canMove = false;
-			canAttack = false;
-			//Debug.Log("Swipe");
-			transform.Find("Spear Container").Find("Spear").gameObject.transform.position = transform.Find("Spear Container").Find("SpearPokePosition").gameObject.transform.position;
-			timeSinceAttack = Time.time;
 		}
 	}
 

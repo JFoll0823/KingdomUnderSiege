@@ -5,17 +5,25 @@ using UnityEngine;
 public class Pivot : MonoBehaviour
 {
 
-
+    public static bool followMouse;
 
     //code sourced from https://www.youtube.com/watch?v=6hp9-mslbzI
+
+    private void Awake()
+    {
+        followMouse = true;
+    }
 
     // Update is called once per frame
     void Update()
     {
-        Vector3 difference = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+        if (followMouse)
+        {
+            Vector3 difference = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
 
-        float rotationZ = Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg - 180f;
+            float rotationZ = Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg - 180f;
 
-        transform.rotation = Quaternion.Euler(0f, 0f, rotationZ);
+            transform.rotation = Quaternion.Euler(0f, 0f, rotationZ);
+        }
     }
 }

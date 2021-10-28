@@ -8,11 +8,14 @@ public class Player : MonoBehaviour
 	[SerializeField] float _moveSpeed = 1f;
 	bool canMove = true;
 	bool canAttack = true;
-	bool followMouse = true;
+	[SerializeField] GameObject pivot;
+
+	
 	float cTime = 0; //used in Movement()
 	Vector3 verticalMovementVector;
 	Vector3 sidewaysMovementVector;
-	Vector3 origPos; //tracks spear position before attack
+	Vector3 spearPos; //tracks spear position before attack
+	Vector3 containerPos;
 	float timeSinceAttack = 0;
 
 	public float _healthPoints;
@@ -22,17 +25,27 @@ public class Player : MonoBehaviour
 		_healthPoints = 3;
 	}
 
-	// Update is called once per frame
-	void Update()
+
+    // Update is called once per frame
+    void Update()
 	{
 		Movement();
 		Combat();
 
 		if(((Time.time - timeSinceAttack) >= .5) && !canAttack)
         {
-			transform.Find("Spear Container").Find("Spear").gameObject.transform.position = origPos;
-			canAttack = true;
-			canMove = true;
+			transform.Find("Spear Container").Find("Spear").gameObject.transform.position = spearPos;
+			transform.Find("Spear Container").gameObject.transform.position = containerPos;
+			if (!Pivot.followMouse)
+            {
+				Pivot.followMouse = true;
+            }
+			if((Time.time - timeSinceAttack) >= .7)
+            {
+				canMove = true;
+				canAttack = true;
+            }
+
 		}
 		if(GameState.Instance.getPlayerHealthCurrent() == 0)
 		{
@@ -78,27 +91,31 @@ public class Player : MonoBehaviour
 
 	void Combat()
 	{
-		//poke
-		if (Input.GetButtonDown("Fire1"))
-		{
-			origPos = transform.Find("Spear Container").Find("Spear").gameObject.transform.position;
-			canMove = false;
-			canAttack = false;
-			//Debug.Log("Swipe");
-			transform.Find("Spear Container").Find("Spear").gameObject.transform.position = transform.Find("Spear Container").Find("SpearPokePosition").gameObject.transform.position;
-			timeSinceAttack = Time.time;
-		}
+        if (canAttack)
+        {
+			//poke
+			if (Input.GetButtonDown("Fire1"))
+			{
+				spearPos = transform.Find("Spear Container").Find("Spear").gameObject.transform.position;
+				containerPos = transform.Find("Spear Container").gameObject.transform.position;
+				canMove = false;
+				canAttack = false;
+				//Debug.Log("Poke");
+				transform.Find("Spear Container").Find("Spear").gameObject.transform.position = transform.Find("Spear Container").Find("SpearPokePosition").gameObject.transform.position;
+				timeSinceAttack = Time.time;
+			}
 
 
-		if (Input.GetButtonDown("Fire2"))
-		{
-			canMove = false;
-			canAttack = false;
-			//Debug.Log("Poke");
-
-
-			canAttack = true;
-			canMove = true;
+			if (Input.GetButtonDown("Fire2"))
+			{
+				canMove = false;
+				canAttack = false;
+				Pivot.followMouse = false;
+				//Debug.Log("Swipe");
+				containerPos = transform.Find("Spear Container").gameObject.transform.position;
+				spearPos = transform.Find("Spear Container").Find("Spear").gameObject.transform.position;
+				transform.Find("Spear Container").gameObject.transform.Rotate(0,0, transform.Find("Spear Container").gameObject.transform.rotation.z - 30, Space.Self);
+			}
 		}
 	}
 

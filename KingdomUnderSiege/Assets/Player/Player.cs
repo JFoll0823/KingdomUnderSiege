@@ -26,31 +26,34 @@ public class Player : MonoBehaviour
 	}
 
 
-    // Update is called once per frame
-    void Update()
+	// Update is called once per frame
+	void Update()
 	{
 		Movement();
 		Combat();
 
-		if(((Time.time - timeSinceAttack) >= .5) && !canAttack)
-        {
+		if (((Time.time - timeSinceAttack) >= .5) && !canAttack)
+		{
 			transform.Find("Spear Container").Find("Spear").gameObject.transform.position = spearPos;
 			transform.Find("Spear Container").gameObject.transform.position = containerPos;
 			if (!Pivot.followMouse)
-            {
+			{
 				Pivot.followMouse = true;
-            }
-			if((Time.time - timeSinceAttack) >= .7)
-            {
+			}
+			if ((Time.time - timeSinceAttack) >= .7)
+			{
 				canMove = true;
 				canAttack = true;
-            }
+			}
 
 		}
-		if(GameState.Instance.getPlayerHealthCurrent() == 0)
+
+		if (GameState.Instance.getPlayerHealthCurrent() == 0)
 		{
+			GameState.Instance.InitiateGameOver();
 			Destroy(gameObject);
 		}
+
 	}
 
 	void Movement()
@@ -91,8 +94,8 @@ public class Player : MonoBehaviour
 
 	void Combat()
 	{
-        if (canAttack)
-        {
+		if (canAttack)
+		{
 			//poke
 			if (Input.GetButtonDown("Fire1"))
 			{

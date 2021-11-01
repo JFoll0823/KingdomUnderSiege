@@ -23,10 +23,14 @@ public class Skeleton : MonoBehaviour
         if(collider.gameObject.tag == "Spear")
         {
             _healthPoints -= GameState.Instance.statStrength;
+
         }else if(collider.gameObject.tag == "Player")
         {
             GameState.Instance.playerHit();
         }
+
+        Vector3 knockVector = (collider.gameObject.transform.position - transform.position)*-1;
+        transform.position += knockVector;
 
         if (_healthPoints <= 0)
         {

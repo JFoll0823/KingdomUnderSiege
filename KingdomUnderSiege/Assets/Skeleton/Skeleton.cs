@@ -22,14 +22,15 @@ public class Skeleton : MonoBehaviour
     {
         if(collider.gameObject.tag == "Spear")
         {
-            _healthPoints -= 1;
+            _healthPoints -= GameState.Instance.statStrength;
         }else if(collider.gameObject.tag == "Player")
         {
             GameState.Instance.playerHit();
         }
 
-        if (_healthPoints == 0)
+        if (_healthPoints <= 0)
         {
+            GameplayManager.Instance.EnemyKilled();
             Destroy(gameObject);
         }
 

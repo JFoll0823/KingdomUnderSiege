@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class GameState : MonoBehaviour
@@ -12,16 +13,24 @@ public class GameState : MonoBehaviour
     public bool _isGameOver = false;
 
     [SerializeField] GameObject _gameStartText;
-
     [SerializeField] GameObject _gameOverText;
+    [SerializeField] GameObject _healthText;
 
-    int _playerHealthCurrent = 3;
+    public float _playerHealthCurrent;
+
+    public float statStrength;
+    public float statSpeed;
+    public float statHealth;
 
     void Awake()
     {
         Instance = this;
         _gameStartText.SetActive(true);
+        statHealth = 3f;
+        statSpeed = 2f;
+        statStrength = 1f;
         Time.timeScale = 0;
+        _playerHealthCurrent = statHealth;
     }
 
     // Update is called once per frame
@@ -35,6 +44,7 @@ public class GameState : MonoBehaviour
         if (Input.GetButtonDown("Submit") && !_isGameStarted)
         {
             _gameStartText.SetActive(false);
+            _isGameStarted = true;
             Time.timeScale = 1;
         }
     }
@@ -46,7 +56,7 @@ public class GameState : MonoBehaviour
         Time.timeScale = 0;
     }
 
-    public int getPlayerHealthCurrent()
+    public float getPlayerHealthCurrent()
     {
         return _playerHealthCurrent;
     }
@@ -54,5 +64,6 @@ public class GameState : MonoBehaviour
     public void playerHit()
     {
         _playerHealthCurrent -= 1;
+        _healthText.GetComponent<Text>().text = "Health: " + _playerHealthCurrent;
     }
 }

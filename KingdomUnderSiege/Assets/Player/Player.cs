@@ -5,7 +5,6 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
 
-	[SerializeField] float _moveSpeed = 1f;
 	bool canMove = true;
 	bool canAttack = true;
 	[SerializeField] GameObject pivot;
@@ -18,11 +17,10 @@ public class Player : MonoBehaviour
 	Vector3 containerPos;
 	float timeSinceAttack = 0;
 
-	public float _healthPoints;
 	// Start is called before the first frame update
 	void Start()
 	{
-		_healthPoints = 3;
+
 	}
 
 
@@ -48,7 +46,7 @@ public class Player : MonoBehaviour
 
 		}
 
-		if (GameState.Instance.getPlayerHealthCurrent() == 0)
+		if (GameState.Instance.getPlayerHealthCurrent() <= 0)
 		{
 			GameState.Instance.InitiateGameOver();
 			Destroy(gameObject);
@@ -65,17 +63,17 @@ public class Player : MonoBehaviour
 		{
 			if (Input.GetButton("Horizontal"))
 			{
-				transform.position += sidewaysMovementVector * _moveSpeed * Time.deltaTime;
+				transform.position += sidewaysMovementVector * GameState.Instance.statSpeed * Time.deltaTime;
 			}
 
 			if (Input.GetButton("Vertical"))
 			{
-				transform.position += verticalMovementVector * _moveSpeed * Time.deltaTime;
+				transform.position += verticalMovementVector * GameState.Instance.statSpeed * Time.deltaTime;
 			}
 
 			if (Input.GetButtonDown("Jump") && ((Time.time - cTime) >= 3))
 			{
-				transform.position += (verticalMovementVector + sidewaysMovementVector) * _moveSpeed * Time.deltaTime * 30;
+				transform.position += (verticalMovementVector + sidewaysMovementVector) * GameState.Instance.statSpeed * Time.deltaTime * 30;
 				cTime = Time.time;
 			}
 		}

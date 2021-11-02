@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
 
 	bool canMove = true;
 	bool canAttack = true;
+	bool isSwiping = false;
 	[SerializeField] GameObject pivot;
 
 	
@@ -14,7 +15,9 @@ public class Player : MonoBehaviour
 	Vector3 verticalMovementVector;
 	Vector3 sidewaysMovementVector;
 	Vector3 containerPos;
+	Quaternion containerRot;
 	float timeSinceAttack = 0;
+	float timeSwiping = 0;
 
 	// Start is called before the first frame update
 	void Start()
@@ -33,9 +36,10 @@ public class Player : MonoBehaviour
 		{
 			//transform.Find("Spear Container").Find("Spear").gameObject.transform.rotation = spearRot;
 			transform.Find("Spear Container").gameObject.transform.position = containerPos;
-			if (!Pivot.followMouse && transform.Find("Spear Container").gameObject.transform.position == containerPos)
+			if (!Pivot.followMouse && !isSwiping)
 			{
 				Pivot.followMouse = true;
+				transform.Find("Spear Container").Find("Spear").GetComponent<PolygonCollider2D>().enabled = false;
 			}
 			if ((Time.time - timeSinceAttack) >= .7)
 			{
@@ -43,6 +47,15 @@ public class Player : MonoBehaviour
 				canAttack = true;
 			}
 
+		}
+
+		if (isSwiping && !Pivot.followMouse)
+        {
+			transform.Find("Spear Container").gameObject.transform.Rotate(new Vector3(0, 0, 240*Time.deltaTime), Space.Self);
+			if(Time.time - timeSwiping >= .4)
+            {
+				isSwiping = false;
+            }
 		}
 
 		if (GameState.Instance.getPlayerHealthCurrent() <= 0)
@@ -102,10 +115,11 @@ public class Player : MonoBehaviour
 				Pivot.followMouse = false;
 				//Debug.Log("Poke");
 				transform.Find("Spear Container").gameObject.transform.position = transform.Find("Spear Container").Find("SpearPokePosition").gameObject.transform.position;
+				transform.Find("Spear Container").Find("Spear").GetComponent<PolygonCollider2D>().enabled = true;
 				timeSinceAttack = Time.time;
 			}
 
-			/* Attempt at Second attack
+			
 			if (Input.GetButtonDown("Fire2"))
 			{
 				canMove = false;
@@ -113,10 +127,13 @@ public class Player : MonoBehaviour
 				Pivot.followMouse = false;
 				//Debug.Log("Swipe");
 				containerPos = transform.Find("Spear Container").gameObject.transform.position;
-				//transform.Find("Spear Container").gameObject.transform.Rotate(0,0, transform.Find("Spear Container").gameObject.transform.rotation.z - 360, Space.Self);
-				transform.Find("Spear Container").gameObject.transform.Rotate(new Vector3(0, 0, 45), Space.Self);
+				containerRot = transform.Find("Spear Container").gameObject.transform.rotation;
+				transform.Find("Spear Container").gameObject.transform.Rotate(0, 0, -60f);
+				transform.Find("Spear Container").Find("Spear").GetComponent<PolygonCollider2D>().enabled = true;
+				isSwiping = true;
+				timeSinceAttack = Time.time;
+				timeSwiping = Time.time;
 			}
-			*/
 		}
 	}
 

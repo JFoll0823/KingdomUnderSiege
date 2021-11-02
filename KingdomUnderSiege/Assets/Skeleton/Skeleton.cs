@@ -29,7 +29,7 @@ public class Skeleton : MonoBehaviour
             GameState.Instance.playerHit();
         }
 
-        Vector3 knockVector = (collider.gameObject.transform.position - transform.position)*-1;
+        Vector3 knockVector = (collider.gameObject.transform.position - transform.position)*-3;
         transform.position += knockVector;
 
         if (_healthPoints <= 0)

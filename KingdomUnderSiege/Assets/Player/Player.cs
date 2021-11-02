@@ -13,7 +13,6 @@ public class Player : MonoBehaviour
 	float cTime = 0; //used in Movement()
 	Vector3 verticalMovementVector;
 	Vector3 sidewaysMovementVector;
-	Vector3 spearPos; //tracks spear position before attack
 	Vector3 containerPos;
 	float timeSinceAttack = 0;
 
@@ -32,9 +31,9 @@ public class Player : MonoBehaviour
 
 		if (((Time.time - timeSinceAttack) >= .5) && !canAttack)
 		{
-			transform.Find("Spear Container").Find("Spear").gameObject.transform.position = spearPos;
+			//transform.Find("Spear Container").Find("Spear").gameObject.transform.rotation = spearRot;
 			transform.Find("Spear Container").gameObject.transform.position = containerPos;
-			if (!Pivot.followMouse)
+			if (!Pivot.followMouse && transform.Find("Spear Container").gameObject.transform.position == containerPos)
 			{
 				Pivot.followMouse = true;
 			}
@@ -73,7 +72,7 @@ public class Player : MonoBehaviour
 
 			if (Input.GetButtonDown("Jump") && ((Time.time - cTime) >= 3))
 			{
-				transform.position += (verticalMovementVector + sidewaysMovementVector) * GameState.Instance.statSpeed * Time.deltaTime * 30;
+				transform.position += (verticalMovementVector + sidewaysMovementVector) * GameState.Instance.statSpeed * Time.deltaTime * 20;
 				cTime = Time.time;
 			}
 		}
@@ -97,16 +96,16 @@ public class Player : MonoBehaviour
 			//poke
 			if (Input.GetButtonDown("Fire1"))
 			{
-				spearPos = transform.Find("Spear Container").Find("Spear").gameObject.transform.position;
 				containerPos = transform.Find("Spear Container").gameObject.transform.position;
 				canMove = false;
 				canAttack = false;
+				Pivot.followMouse = false;
 				//Debug.Log("Poke");
-				transform.Find("Spear Container").Find("Spear").gameObject.transform.position = transform.Find("Spear Container").Find("SpearPokePosition").gameObject.transform.position;
+				transform.Find("Spear Container").gameObject.transform.position = transform.Find("Spear Container").Find("SpearPokePosition").gameObject.transform.position;
 				timeSinceAttack = Time.time;
 			}
 
-
+			/* Attempt at Second attack
 			if (Input.GetButtonDown("Fire2"))
 			{
 				canMove = false;
@@ -114,13 +113,15 @@ public class Player : MonoBehaviour
 				Pivot.followMouse = false;
 				//Debug.Log("Swipe");
 				containerPos = transform.Find("Spear Container").gameObject.transform.position;
-				spearPos = transform.Find("Spear Container").Find("Spear").gameObject.transform.position;
-				transform.Find("Spear Container").gameObject.transform.Rotate(0,0, transform.Find("Spear Container").gameObject.transform.rotation.z - 30, Space.Self);
+				//transform.Find("Spear Container").gameObject.transform.Rotate(0,0, transform.Find("Spear Container").gameObject.transform.rotation.z - 360, Space.Self);
+				transform.Find("Spear Container").gameObject.transform.Rotate(new Vector3(0, 0, 45), Space.Self);
 			}
+			*/
 		}
 	}
 
 /*
+ * not used
 	 private void OnTriggerEnter2D(Collider2D collider)
 	{
 		if (collider.gameObject.tag == "Enemy")
